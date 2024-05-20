@@ -52,7 +52,7 @@
   <script src="https://kit.fontawesome.com/e26a309e14.js" crossorigin="anonymous"></script>
   
   <!-- Taskmanager script -->
-  <script type="module" src="./static/index/build_list.js"></script>
+  <script src="./static/js/index/build_list.js"></script>
 
 </body>
 </html>
