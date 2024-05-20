@@ -1,6 +1,7 @@
 // Declare variables
 let activeItem = null;
 let list_snapshot = [];
+let xhr = new XMLHttpRequest();
 
 // Call buildList() function
 buildList();
@@ -18,15 +19,7 @@ function buildList() {
 
     // TESTING
 
-    let url = "includes/fetch_data.php";
-
-    let method = "GET";
-
-    let xhr = new XMLHttpRequest();
-
-    let async = true;
-
-    xhr.open(method, url, async);
+    xhr.open("GET", "includes/fetch_data.php", true);
 
     xhr.send();
 
@@ -35,7 +28,7 @@ function buildList() {
     xhr.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             let data = JSON.parse(this.responseText);
-            console.log(data);
+            //console.log(data);
             list = data;
         }
 
@@ -125,10 +118,10 @@ function buildList() {
 
 // Function to handle list creation
 function handleList(task, list, wrapper) {
-    let deleted_task = document.getElementById(`data-row-${task}`);
+    /* let deleted_task = document.getElementById(`data-row-${task}`);
     if (deleted_task) {
       deleted_task.remove();
-    }
+    } */
     let { date, title, current_status } = updateTaskStatus(list[task]);
     let item = constructTaskItem(task, date, title, current_status);
     wrapper.innerHTML += item;
@@ -142,7 +135,7 @@ function updateTaskStatus(task) {
     let current_status = '<i class="fa-solid fa-check"></i>';
   
     // Visually represent status of task
-    if (task.completed.toString() === "true") {
+    if (task.completed === "1") {
       // Add strike through to completed tasks
       date = `<strike class="title">${task.due_date}</strike>`;
       title = `<strike class="title">${task.title}</strike>`;

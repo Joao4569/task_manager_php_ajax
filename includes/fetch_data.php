@@ -7,7 +7,7 @@ $port = 3307;
 
 $connection = mysqli_connect($server, $user_name, $password, $database, $port);
 
-$result = mysqli_query($connection, "SELECT * FROM tasks");
+$result = mysqli_query($connection, "SELECT * FROM tasks ORDER BY due_date ASC");
 
 $tasks = array();
 
