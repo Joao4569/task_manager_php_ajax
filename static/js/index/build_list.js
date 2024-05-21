@@ -74,6 +74,29 @@ function buildList() {
 
 }
 
+let submit_button = document.getElementById("submit");
+submit_button.addEventListener("submit", function (event) {
+    event.preventDefault();
+    console.log("Form submitted");
+
+    let title = document.getElementById("title").value;
+    let date = document.getElementById("date").value;
+
+    let xhr = new XMLHttpRequest();
+    let url = "./includes/form_handler.php";
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function () {
+        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+            // Request finished. Do processing here.
+            buildList();
+            //document.getElementById("submit").value = "Add Task";
+            document.getElementById("form").reset();
+        }
+    }
+    xhr.send(`title=${title}&date=${date}`);
+});
+
 
 /* // Add event listener to form for handling submission
 let submit_button = document.getElementById("submit");
