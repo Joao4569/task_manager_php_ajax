@@ -14,6 +14,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         mysqli_close($connection);
 
         header("Location: ../index.php");
+
+        die();
+        
     } catch (Exception $e) {
         die("Query failed: " . $e->getMessage());
     }
