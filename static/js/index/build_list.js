@@ -1,7 +1,7 @@
 // Declare variables
 let activeItem = null;
 let list_snapshot = [];
-let xhr = new XMLHttpRequest();
+
 
 // Call buildList() function
 buildList();
@@ -18,6 +18,8 @@ function buildList() {
     let wrapper = document.getElementById("list-wrapper");
 
     // TESTING
+
+    let xhr = new XMLHttpRequest();
 
     xhr.open("GET", "includes/fetch_data.php", true);
 
