@@ -25,10 +25,9 @@ function buildList() {
 
     let list = {};
 
-    xhr.onreadystatechange = function () {
+    xhr.onload = function () {
         if (this.readyState == 4 && this.status == 200) {
             let data = JSON.parse(this.responseText);
-            //console.log(data);
             list = data;
         }
 
@@ -65,56 +64,63 @@ function buildList() {
         for (let task in list) {
             addTaskEventListeners(task, list);
         }
+
+        
         
     };
+    
 
-    // Add event listener to form for handling submission
-    //let form = document.getElementById("form-wrapper");
-/* form.addEventListener("submit", function (event) {
-  event.preventDefault();
+}
 
-  // Set URL for API
-  let url = "http://127.0.0.1:8000/api/task-create/";
 
-  // Check if activeItem is not null
-  if (activeItem != null) {
-    url = `http://127.0.0.1:8000/api/task-update/${activeItem.id}/`;
-    activeItem = null;
-  }
+/* // Add event listener to form for handling submission
+let submit_button = document.getElementById("submit");
+submit_button.addEventListener("submit", function (event) {
+    event.preventDefault();
+    console.log("Form submitted");
 
-  // Get form data
-  let title = document.getElementById("title").value;
-  let date = document.getElementById("date").value;
+    // Set URL for API
+    //let url = "includes/formhandler.php";
 
-  // Post form data to API
-  fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-type": "application/json",
-      HTTP_X_CSRFToken: csrftoken,
-    },
-    body: JSON.stringify({
-      title: title,
-      due_date: date,
-    }),
-  }).then(function (response) {
-    buildList();
 
-    // Reset button text to 'Add Task'
-    document.getElementById("submit").value = "Add Task";
-
-    // Reset form
-    document.getElementById("form").reset();
-
-    // Remove create new task button
-    let button = document.getElementById("create-new-task-btn");
-    if (button) {
-      // Check if the button exists
-      button.parentNode.removeChild(button);
+    /* 
+    // Check if activeItem is not null
+    if (activeItem != null) {
+        url = `http://127.0.0.1:8000/api/task-update/${activeItem.id}/`;
+        activeItem = null;
     }
-  }); */
-} //);
 
+    // Get form data
+    let title = document.getElementById("title").value;
+    let date = document.getElementById("date").value;
+
+    // Post form data to API
+    fetch(url, {
+        method: "POST",
+        headers: {
+        "Content-type": "application/json",
+        HTTP_X_CSRFToken: csrftoken,
+        },
+        body: JSON.stringify({
+        title: title,
+        due_date: date,
+        }),
+    }).then(function (response) {
+        buildList();
+
+        // Reset button text to 'Add Task'
+        document.getElementById("submit").value = "Add Task";
+
+        // Reset form
+        document.getElementById("form").reset();
+
+        // Remove create new task button
+        let button = document.getElementById("create-new-task-btn");
+        if (button) {
+        // Check if the button exists
+        button.parentNode.removeChild(button);
+        } */
+//}); */
 
 // Function to handle list creation
 function handleList(task, list, wrapper) {
@@ -228,12 +234,6 @@ function markTaskAsOverdue(task) {
   let overdue_date = document.getElementById(`data-row-${task}`);
   overdue_date.classList.add("overdue");
 }
-
-
-
-
-
-
 
 // Function to handle task due date
 function handleTaskDueDate(

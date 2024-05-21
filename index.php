@@ -16,7 +16,7 @@
     <div id="form-wrapper">
 
       <!-- container for form -->
-      <form id="form" class="flex-wrapper">
+      <form id="form" class="flex-wrapper" action="./includes/form_handler.php" method="POST">
           <div class="user-input">
             <input id="title" class="form-control" type="text" name="title" placeholder="Add task">
           </div>
