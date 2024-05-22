@@ -74,10 +74,17 @@ function buildList() {
 
 }
 
+// Handle form submission for adding tasks
 let submit_button = document.getElementById("submit");
 submit_button.addEventListener("submit", function (event) {
     event.preventDefault();
     console.log("Form submitted");
+
+    /* // Check if activeItem is not null
+    if (activeItem != null) {
+        url = `http://127.0.0.1:8000/api/task-update/${activeItem.id}/`;
+        activeItem = null;
+    } */
 
     let title = document.getElementById("title").value;
     let date = document.getElementById("date").value;
@@ -90,69 +97,33 @@ submit_button.addEventListener("submit", function (event) {
         if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
             // Request finished. Do processing here.
             buildList();
-            //document.getElementById("submit").value = "Add Task";
+
+            // Reset button text to 'Add Task'
+            document.getElementById("submit").value = "Add Task";
+
+            // Reset form
             document.getElementById("form").reset();
+
+            // Remove create new task button
+            let button = document.getElementById("create-new-task-btn");
+            if (button) {
+              // Check if the button exists
+              button.parentNode.removeChild(button);
+            }
         }
     }
     xhr.send(`title=${title}&date=${date}`);
 });
 
 
-/* // Add event listener to form for handling submission
-let submit_button = document.getElementById("submit");
-submit_button.addEventListener("submit", function (event) {
-    event.preventDefault();
-    console.log("Form submitted");
 
-    // Set URL for API
-    //let url = "includes/formhandler.php";
-
-
-    /* 
-    // Check if activeItem is not null
-    if (activeItem != null) {
-        url = `http://127.0.0.1:8000/api/task-update/${activeItem.id}/`;
-        activeItem = null;
-    }
-
-    // Get form data
-    let title = document.getElementById("title").value;
-    let date = document.getElementById("date").value;
-
-    // Post form data to API
-    fetch(url, {
-        method: "POST",
-        headers: {
-        "Content-type": "application/json",
-        HTTP_X_CSRFToken: csrftoken,
-        },
-        body: JSON.stringify({
-        title: title,
-        due_date: date,
-        }),
-    }).then(function (response) {
-        buildList();
-
-        // Reset button text to 'Add Task'
-        document.getElementById("submit").value = "Add Task";
-
-        // Reset form
-        document.getElementById("form").reset();
-
-        // Remove create new task button
-        let button = document.getElementById("create-new-task-btn");
-        if (button) {
-        // Check if the button exists
-        button.parentNode.removeChild(button);
-        } */
-//}); */
 
 // Function to handle list creation
 function handleList(task, list, wrapper) {
-    /* let deleted_task = document.getElementById(`data-row-${task}`);
+    let deleted_task = document.getElementById(`data-row-${task}`);
     if (deleted_task) {
       deleted_task.remove();
-    } */
+    }
     let { date, title, current_status } = updateTaskStatus(list[task]);
     let item = constructTaskItem(task, date, title, current_status);
     wrapper.innerHTML += item;
@@ -307,7 +278,8 @@ function addTaskEventListeners(task, list) {
     let statusBtn = document.getElementsByClassName("status")[task];
 
     editBtn.addEventListener("click", function () {
-        editItem(list[task]);
+        console.log("Edit button clicked");
+        /* editItem(list[task]);
         let create_button = document.getElementById("create-button");
         create_button.addEventListener("click", function (event) {
         activeItem = null;
@@ -315,14 +287,16 @@ function addTaskEventListeners(task, list) {
         document.getElementById("date").value = "";
         document.getElementById("submit").value = "Add Task";
         document.getElementById("create-button").innerHTML = "";
-        });
+        }); */
     });
 
     deleteBtn.addEventListener("click", function () {
-        deleteItem(list[task]);
+        console.log("Delete button clicked");
+        //deleteItem(list[task]);
     });
 
     statusBtn.addEventListener("click", function () {
-        taskCompleted(list[task]);
+        console.log("Status button clicked");
+        //taskCompleted(list[task]);
     });
 }
