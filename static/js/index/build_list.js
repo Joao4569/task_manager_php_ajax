@@ -76,21 +76,27 @@ function buildList() {
 
 // Handle form submission for adding tasks
 let submit_button = document.getElementById("submit");
-submit_button.addEventListener("submit", function (event) {
+submit_button.addEventListener("click", function (event) {
     event.preventDefault();
-    console.log("Form submitted");
+    //console.log("Form submitted");
 
-    /* // Check if activeItem is not null
-    if (activeItem != null) {
-        url = `http://127.0.0.1:8000/api/task-update/${activeItem.id}/`;
-        activeItem = null;
-    } */
+    let url = "./includes/form_handler.php";
 
     let title = document.getElementById("title").value;
     let date = document.getElementById("date").value;
+    let task_id = null;
+
+    // Check if updating task instead of adding new task
+    if (activeItem != null) {
+        // console.log("Editing task now!");
+        // console.log(activeItem.id);
+        url = "includes/task_update.php";
+        task_id = activeItem.id;
+        activeItem = null;
+    }
 
     let xhr = new XMLHttpRequest();
-    let url = "./includes/form_handler.php";
+    
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.onreadystatechange = function () {
@@ -112,7 +118,7 @@ submit_button.addEventListener("submit", function (event) {
             }
         }
     }
-    xhr.send(`title=${title}&date=${date}`);
+    xhr.send(`title=${title}&date=${date}&task_id=${task_id}`);
 });
 
 
@@ -174,16 +180,16 @@ function constructTaskItem(task, date, title, current_status) {
 
 // Edit task function
 function editItem(task) {
-  // Create new task button
-  let create_btn =
-    '<button id="create-new-task-btn" class="submit-button">Create New Task </button>';
-  activeItem = task;
+    // Create new task button
+    let create_btn =
+        '<button id="create-new-task-btn" class="submit-button">Create New Task </button>';
+    activeItem = task;
 
-  // Set form values
-  document.getElementById("title").value = activeItem.title;
-  document.getElementById("date").value = activeItem.due_date;
-  document.getElementById("submit").value = "Update Task";
-  document.getElementById("create-button").innerHTML = create_btn;
+    // Set form values
+    document.getElementById("title").value = activeItem.title;
+    document.getElementById("date").value = activeItem.due_date;
+    document.getElementById("submit").value = "Update Task";
+    document.getElementById("create-button").innerHTML = create_btn;
 }
 
 /* 
@@ -279,8 +285,9 @@ function addTaskEventListeners(task, list) {
     let statusBtn = document.getElementsByClassName("status")[task];
 
     editBtn.addEventListener("click", function () {
-        console.log("Edit button clicked");
+        //console.log("Edit button clicked");
         editItem(list[task]);
+        
         let create_button = document.getElementById("create-button");
         create_button.addEventListener("click", function (event) {
             event.preventDefault();
