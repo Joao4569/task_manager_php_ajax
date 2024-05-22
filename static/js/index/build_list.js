@@ -173,7 +173,7 @@ function constructTaskItem(task, date, title, current_status) {
   }
 
 // Edit task function
-/* function editItem(task) {
+function editItem(task) {
   // Create new task button
   let create_btn =
     '<button id="create-new-task-btn" class="submit-button">Create New Task </button>';
@@ -186,6 +186,7 @@ function constructTaskItem(task, date, title, current_status) {
   document.getElementById("create-button").innerHTML = create_btn;
 }
 
+/* 
 // Delete task function
 function deleteItem(task) {
   // Set URL for API
@@ -279,15 +280,17 @@ function addTaskEventListeners(task, list) {
 
     editBtn.addEventListener("click", function () {
         console.log("Edit button clicked");
-        /* editItem(list[task]);
+        editItem(list[task]);
         let create_button = document.getElementById("create-button");
         create_button.addEventListener("click", function (event) {
-        activeItem = null;
-        document.getElementById("title").value = "";
-        document.getElementById("date").value = "";
-        document.getElementById("submit").value = "Add Task";
-        document.getElementById("create-button").innerHTML = "";
-        }); */
+            event.preventDefault();
+            console.log("Create button clicked");
+            activeItem = null;
+            document.getElementById("title").value = "";
+            document.getElementById("date").value = "";
+            document.getElementById("submit").value = "Add Task";
+            document.getElementById("create-button").innerHTML = "";
+        });
     });
 
     deleteBtn.addEventListener("click", function () {
