@@ -8,6 +8,7 @@ buildList();
 
 // Build List of tasks
 function buildList() {
+
     // Set current date parameters for comparison
     const today = new Date();
     const current_month = today.getMonth() + 1;
@@ -65,9 +66,7 @@ function buildList() {
         // Add event listeners to each task item
         for (let task in list) {
             addTaskEventListeners(task, list);
-        }
-
-        
+        } 
         
     };
     
@@ -78,18 +77,16 @@ function buildList() {
 let submit_button = document.getElementById("submit");
 submit_button.addEventListener("click", function (event) {
     event.preventDefault();
-    //console.log("Form submitted");
 
-    let url = "./includes/form_handler.php";
+    let url = "includes/form_handler.php";
 
     let title = document.getElementById("title").value;
     let date = document.getElementById("date").value;
     let task_id = null;
+    let completed = 0;
 
     // Check if updating task instead of adding new task
     if (activeItem != null) {
-        // console.log("Editing task now!");
-        // console.log(activeItem.id);
         url = "includes/task_update.php";
         task_id = activeItem.id;
         activeItem = null;
@@ -118,7 +115,7 @@ submit_button.addEventListener("click", function (event) {
             }
         }
     }
-    xhr.send(`title=${title}&date=${date}&task_id=${task_id}`);
+    xhr.send(`title=${title}&date=${date}&task_id=${task_id}&completed=${completed}`);
 });
 
 
@@ -171,7 +168,7 @@ function constructTaskItem(task, date, title, current_status) {
                   <button class="task-list-button delete"><i class="fa-solid fa-trash"></i></button>
               </div>
               <div class="task-list-button-container">
-                  <button id="status" class="task-list-button status">${current_status}</button>
+                  <button class="task-list-button status">${current_status}</button>
               </div>
           </div>
       `;
@@ -208,29 +205,32 @@ function deleteItem(task) {
   }).then((response) => {
     buildList();
   });
-}
+} */
 
 // Task completed function
 function taskCompleted(task) {
-  // Set URL for API
-  let url = `http://127.0.0.1:8000/api/task-update/${task.id}/`;
+    // Set URL for API
+    let url = "includes/task_update.php";
 
-  // Fetch data from API
-  fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-type": "application/json",
-      HTTP_X_CSRFToken: csrftoken,
-    },
-    body: JSON.stringify({
-      title: task.title,
-      due_date: task.due_date,
-      completed: !task.completed,
-    }),
-  }).then((response) => {
-    buildList();
-  });
-} */
+    let title = task.title;
+    let date = task.due_date;
+    let task_id = task.id;
+    let completed = task.completed === "1" ? "0" : "1";
+
+    let xhr = new XMLHttpRequest();
+    
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function () {
+        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+            // Request finished. Do processing here.
+            buildList();
+        }
+    }
+
+    xhr.send(`title=${title}&date=${date}&task_id=${task_id}&completed=${completed}`);
+
+}
 
 // Function to mark task as overdue
 function markTaskAsOverdue(task) {
@@ -252,26 +252,28 @@ function handleTaskDueDate(
   let task_month = parseInt(date_array[1]);
   let task_day_date = parseInt(date_array[2]);
 
-  if (task_year < current_year && list[task].completed.toString() != "true") {
+  console.log(list[task].completed);
+
+  if (task_year < current_year && list[task].completed != "1") {
     let overdue_date = document.getElementById(`data-row-${task}`);
     overdue_date.classList.add("overdue");
   } else if (task_year > current_year) {
     return;
   } else if (
     task_month < current_month &&
-    list[task].completed.toString() != "true"
+    list[task].completed != "1"
   ) {
     markTaskAsOverdue(task);
   } else if (
     task_day_date < current_date &&
-    list[task].completed.toString() != "true"
+    list[task].completed != "1"
   ) {
     markTaskAsOverdue(task);
   } else if (
     task_year === current_year &&
     task_month === current_month &&
     task_day_date === current_date &&
-    list[task].completed.toString() != "true"
+    list[task].completed != "1"
   ) {
     let today_tasks = document.getElementById(`data-row-${task}`);
     today_tasks.classList.add("current-day");
@@ -285,7 +287,6 @@ function addTaskEventListeners(task, list) {
     let statusBtn = document.getElementsByClassName("status")[task];
 
     editBtn.addEventListener("click", function () {
-        //console.log("Edit button clicked");
         editItem(list[task]);
         
         let create_button = document.getElementById("create-button");
@@ -306,7 +307,6 @@ function addTaskEventListeners(task, list) {
     });
 
     statusBtn.addEventListener("click", function () {
-        console.log("Status button clicked");
-        //taskCompleted(list[task]);
+        taskCompleted(list[task]);
     });
 }
