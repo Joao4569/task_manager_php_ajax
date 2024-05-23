@@ -189,23 +189,26 @@ function editItem(task) {
     document.getElementById("create-button").innerHTML = create_btn;
 }
 
-/* 
-// Delete task function
-function deleteItem(task) {
-  // Set URL for API
-  let url = `http://127.0.0.1:8000/api/task-delete/${task.id}/`;
 
-  // Fetch data from API
-  fetch(url, {
-    method: "DELETE",
-    headers: {
-      "Content-type": "application/json",
-      HTTP_X_CSRFToken: csrftoken,
-    },
-  }).then((response) => {
-    buildList();
-  });
-} */
+function deleteItem(task) {
+    // Set URL for API
+    let url = "includes/task_delete.php";
+
+    let task_id = task.id;
+
+    let xhr = new XMLHttpRequest();
+    
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function () {
+        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+            // Request finished. Do processing here.
+            buildList();
+        }
+    }
+
+    xhr.send(`task_id=${task_id}`);
+}
 
 // Task completed function
 function taskCompleted(task) {
@@ -252,8 +255,6 @@ function handleTaskDueDate(
   let task_month = parseInt(date_array[1]);
   let task_day_date = parseInt(date_array[2]);
 
-  console.log(list[task].completed);
-
   if (task_year < current_year && list[task].completed != "1") {
     let overdue_date = document.getElementById(`data-row-${task}`);
     overdue_date.classList.add("overdue");
@@ -292,7 +293,6 @@ function addTaskEventListeners(task, list) {
         let create_button = document.getElementById("create-button");
         create_button.addEventListener("click", function (event) {
             event.preventDefault();
-            console.log("Create button clicked");
             activeItem = null;
             document.getElementById("title").value = "";
             document.getElementById("date").value = "";
@@ -303,7 +303,7 @@ function addTaskEventListeners(task, list) {
 
     deleteBtn.addEventListener("click", function () {
         console.log("Delete button clicked");
-        //deleteItem(list[task]);
+        deleteItem(list[task]);
     });
 
     statusBtn.addEventListener("click", function () {
