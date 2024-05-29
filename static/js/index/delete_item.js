@@ -1,3 +1,6 @@
+import { buildList } from "./build_list.js";
+
+// Function to delete item from list
 export function deleteItem(task) {
     // Set URL for API
     let url = "includes/task_delete.php";
