@@ -21,16 +21,19 @@ export function buildList() {
   // Target list-wrapper div
   let wrapper = document.getElementById("list-wrapper");
 
-  // TESTING
-
+    // Initialize a new XMLHttpRequest() object
   let xhr = new XMLHttpRequest();
 
+  // Open a new connection, using the GET request on the URL endpoint
   xhr.open("GET", "includes/fetch_data.php", true);
 
+  // Send request
   xhr.send();
 
+  // Initialize list variable
   let list = {};
 
+  // Handle response to request
   xhr.onload = function () {
     if (this.readyState == 4 && this.status == 200) {
       let data = JSON.parse(this.responseText);
@@ -42,6 +45,7 @@ export function buildList() {
       handleList(task, list, wrapper);
     }
 
+    // Loop through tasks and check if task is due today or not
     for (let task in list) {
       handleTaskDueDate(task, list, current_month, current_year, current_date);
     }
@@ -66,5 +70,3 @@ export function buildList() {
     }
   };
 }
-
-

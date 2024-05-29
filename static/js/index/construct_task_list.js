@@ -1,3 +1,4 @@
+// This file contains functions that construct the task list items
 export function constructTaskItem(task, date, title, current_status) {
     // Construct each task item
     let item = `
