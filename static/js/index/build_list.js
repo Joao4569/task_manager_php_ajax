@@ -1,4 +1,5 @@
 import { handleList } from "./handle_list.js";
+import { addTaskEventListeners } from "./add_task_event_listeners.js";
 
 // Declare variables
 let activeItem = null;
@@ -8,7 +9,7 @@ let list_snapshot = [];
 buildList();
 
 // Build List of tasks
-function buildList() {
+export function buildList() {
   // Set current date parameters for comparison
   const today = new Date();
   const current_month = today.getMonth() + 1;
@@ -59,7 +60,7 @@ function buildList() {
 
     // Add event listeners to each task item
     for (let task in list) {
-      addTaskEventListeners(task, list);
+      addTaskEventListeners(task, list, activeItem);
     }
   };
 }
@@ -111,66 +112,6 @@ submit_button.addEventListener("click", function (event) {
   );
 });
 
-// Edit task function
-function editItem(task) {
-  // Create new task button
-  let create_btn =
-    '<button id="create-new-task-btn" class="submit-button">Create New Task </button>';
-  activeItem = task;
-
-  // Set form values
-  document.getElementById("title").value = activeItem.title;
-  document.getElementById("date").value = activeItem.due_date;
-  document.getElementById("submit").value = "Update Task";
-  document.getElementById("create-button").innerHTML = create_btn;
-}
-
-function deleteItem(task) {
-  // Set URL for API
-  let url = "includes/task_delete.php";
-
-  let task_id = task.id;
-
-  let xhr = new XMLHttpRequest();
-
-  xhr.open("POST", url, true);
-  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-  xhr.onreadystatechange = function () {
-    if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-      // Request finished. Do processing here.
-      buildList();
-    }
-  };
-
-  xhr.send(`task_id=${task_id}`);
-}
-
-// Task completed function
-function taskCompleted(task) {
-  // Set URL for API
-  let url = "includes/task_update.php";
-
-  let title = task.title;
-  let date = task.due_date;
-  let task_id = task.id;
-  let completed = task.completed === "1" ? "0" : "1";
-
-  let xhr = new XMLHttpRequest();
-
-  xhr.open("POST", url, true);
-  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-  xhr.onreadystatechange = function () {
-    if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-      // Request finished. Do processing here.
-      buildList();
-    }
-  };
-
-  xhr.send(
-    `title=${title}&date=${date}&task_id=${task_id}&completed=${completed}`
-  );
-}
-
 // Function to mark task as overdue
 function markTaskAsOverdue(task) {
   let overdue_date = document.getElementById(`data-row-${task}`);
@@ -211,32 +152,4 @@ function handleTaskDueDate(
   }
 }
 
-// Function to add event listeners to each task item
-function addTaskEventListeners(task, list) {
-  let editBtn = document.getElementsByClassName("edit")[task];
-  let deleteBtn = document.getElementsByClassName("delete")[task];
-  let statusBtn = document.getElementsByClassName("status")[task];
 
-  editBtn.addEventListener("click", function () {
-    editItem(list[task]);
-
-    let create_button = document.getElementById("create-button");
-    create_button.addEventListener("click", function (event) {
-      event.preventDefault();
-      activeItem = null;
-      document.getElementById("title").value = "";
-      document.getElementById("date").value = "";
-      document.getElementById("submit").value = "Add Task";
-      document.getElementById("create-button").innerHTML = "";
-    });
-  });
-
-  deleteBtn.addEventListener("click", function () {
-    console.log("Delete button clicked");
-    deleteItem(list[task]);
-  });
-
-  statusBtn.addEventListener("click", function () {
-    taskCompleted(list[task]);
-  });
-}
