@@ -18,7 +18,7 @@
       <!-- container for form -->
       <form id="form" class="flex-wrapper">
           <div class="user-input">
-            <input id="title" class="form-control" type="text" name="title" placeholder="Add task">
+            <input id="title" class="form-control" type="text" name="title" placeholder="Task description">
           </div>
           <div class="date-input">
             <input id="date" class="form-control" type="date" name="date" placeholder="Add due date">
